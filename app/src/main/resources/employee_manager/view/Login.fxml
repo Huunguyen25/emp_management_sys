@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="center" hgap="10" vgap="10" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="employee_manager.controller.LoginController">
+        <Label text="Employee ID" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="empidField"  promptText="Enter employee id" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+        <Label text="Employee Email" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <TextField fx:id="emailField" promptText="Enter employee email" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <StackPane alignment="center" GridPane.rowIndex="5">
+                <Button text="Login" onAction="#handleLoginClick" alignment="center"/>
+        </StackPane> 
+</GridPane>
+

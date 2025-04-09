@@ -1,0 +1,6 @@
+# Variables do not require quotes
+# Example Database configuration file
+
+db.url=jdbc:mysql://localhost:3306/employeeData
+db.username=your_mysql_username
+db.password=your_mysql_password
