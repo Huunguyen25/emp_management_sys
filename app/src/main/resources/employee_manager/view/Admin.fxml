@@ -1,12 +1,167 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<GridPane alignment="center" hgap="10" vgap="10" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="employee_manager.controller.AdminController">
-        <Label text="Successfully logged in Admin account" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <StackPane alignment="center" GridPane.rowIndex="8">
-                <Button text="Logout" onAction="#handleLogout" alignment="center"/>
-        </StackPane>
-</GridPane>
 
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="1202.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <TableView prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columns>
+                      <TableColumn prefWidth="47.0" text="Emp ID" />
+                      <TableColumn prefWidth="84.0" text="First Name" />
+                        <TableColumn prefWidth="94.0" text="Last Name" />
+                        <TableColumn prefWidth="126.0" text="Email" />
+                        <TableColumn minWidth="0.0" prefWidth="65.0" text="Hire Date" />
+                        <TableColumn prefWidth="69.0" text="Salary" />
+                        <TableColumn prefWidth="90.0" text="SSN" />
+                    </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <TabPane layoutY="-20.0" prefHeight="291.0" prefWidth="1200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <tabs>
+                      <Tab text="CRUD Management">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                        </content>
+                      </Tab>
+                      <Tab text="Employee Search">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <TextField fx:id="filterByEmpID" layoutX="14.0" layoutY="50.0" prefHeight="25.0" prefWidth="111.0" promptText="Enter employee ID" />
+                                    <Label layoutX="14.0" layoutY="7.0" prefHeight="27.0" prefWidth="122.0" text="Filter Table by:">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="14.0" layoutY="33.0" text="Emplyee ID" />
+                                    <Label layoutX="135.0" layoutY="33.0" text="Name" />
+                                    <TextField fx:id="filterByName" layoutX="135.0" layoutY="50.0" prefHeight="25.0" prefWidth="131.0" promptText="Enter Employee Name" />
+                                    <Label layoutX="276.0" layoutY="33.0" text="Email" />
+                                    <TextField fx:id="filterByEmail" layoutX="276.0" layoutY="50.0" prefHeight="25.0" prefWidth="142.0" promptText="Enter Employee Email" />
+                                    <DatePicker fx:id="filterbyHireDateStart" layoutX="14.0" layoutY="96.0" />
+                                    <Label layoutX="14.0" layoutY="79.0" prefHeight="17.0" prefWidth="87.0" text="Hire Date Start" />
+                                    <Label layoutX="196.0" layoutY="79.0" text="Hire Date End" />
+                                    <DatePicker fx:id="filterByHireDateEnd" layoutX="196.0" layoutY="96.0" />
+                                    <Label layoutX="378.0" layoutY="79.0" text="SSN" />
+                                    <TextField fx:id="filterBySSN" layoutX="378.0" layoutY="96.0" prefHeight="0.0" prefWidth="121.0" promptText="Enter Employee SSN" />
+                                    <Button fx:id="applyFilterBtn" layoutX="309.0" layoutY="162.0" mnemonicParsing="false" onAction="#applySearchFilter" text="Apply Filter" AnchorPane.bottomAnchor="55.0" AnchorPane.rightAnchor="814.0" />
+                                    <Label layoutX="428.0" layoutY="33.0" text="Minimum Salary:">
+                                       <opaqueInsets>
+                                          <Insets bottom="10.0" right="10.0" />
+                                       </opaqueInsets>
+                                       <padding>
+                                          <Insets bottom="10.0" right="5.0" />
+                                       </padding>
+                                    </Label>
+                                    <CheckBox fx:id="filterByMinSalaryInclusive" layoutX="522.0" layoutY="33.0" mnemonicParsing="false" text="Inclusive">
+                                       <opaqueInsets>
+                                          <Insets bottom="10.0" right="30.0" />
+                                       </opaqueInsets>
+                                    </CheckBox>
+                                    <TextField fx:id="filterByMinSalary" layoutX="428.0" layoutY="50.0" promptText="Enter Minimum Salary" />
+                                    <Label layoutX="600.0" layoutY="33.0" text="Maximum Salary:">
+                                       <opaqueInsets>
+                                          <Insets bottom="10.0" right="10.0" />
+                                       </opaqueInsets>
+                                       <padding>
+                                          <Insets bottom="10.0" right="5.0" />
+                                       </padding>
+                                    </Label>
+                                    <CheckBox fx:id="filterByMaxSalaryInclusive" layoutX="696.0" layoutY="33.0" mnemonicParsing="false" text="Inclusive">
+                                       <opaqueInsets>
+                                          <Insets bottom="10.0" right="30.0" />
+                                       </opaqueInsets>
+                                    </CheckBox>
+                                    <TextField fx:id="filterbyMaxSalary" layoutX="600.0" layoutY="50.0" promptText="Enter Maximum Salary" />
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </Tab>
+                        <Tab text="Update Employee Salary">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="341.0" prefWidth="600.0">
+                                 <children>
+                                    <Label layoutX="14.0" layoutY="14.0" text="Percentage to Apply to Salary:">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets right="10.0" />
+                                       </padding>
+                                    </Label>
+                                    <TextField fx:id="SalaryUpdatePercentage" layoutX="210.0" layoutY="12.0" prefHeight="25.0" prefWidth="104.0" promptText="Enter percentage" AnchorPane.topAnchor="12.0" />
+                                    <Label layoutX="314.0" layoutY="16.0" text="\%">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <padding>
+                                          <Insets left="1.0" />
+                                       </padding>
+                                    </Label>
+                                    <Label layoutX="14.0" layoutY="37.0" text="Minimum Salary:">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <opaqueInsets>
+                                          <Insets bottom="10.0" right="10.0" />
+                                       </opaqueInsets>
+                                    </Label>
+                                    <CheckBox fx:id="minSalaryUpdateInclusive" layoutX="123.0" layoutY="39.0" mnemonicParsing="false" text="Inclusive">
+                                       <opaqueInsets>
+                                          <Insets bottom="10.0" right="30.0" />
+                                       </opaqueInsets>
+                                    </CheckBox>
+                                    <TextField fx:id="minSalaryUpdate" layoutX="14.0" layoutY="57.0" promptText="Enter Minimum Salary" />
+                                    <Label layoutX="211.0" layoutY="38.0" text="Maximum Salary:">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                       <opaqueInsets>
+                                          <Insets bottom="10.0" right="10.0" />
+                                       </opaqueInsets>
+                                    </Label>
+                                    <CheckBox fx:id="maxSalaryUpdateInclusive" layoutX="321.0" layoutY="40.0" mnemonicParsing="false" text="Inclusive">
+                                       <opaqueInsets>
+                                          <Insets bottom="10.0" right="30.0" />
+                                       </opaqueInsets>
+                                    </CheckBox>
+                                    <TextField fx:id="maxSalaryUpdate" layoutX="210.0" layoutY="57.0" promptText="Enter Maximum Salary" />
+                                    <Button fx:id="applySalaryBtn" layoutX="128.0" layoutY="109.0" mnemonicParsing="false" onAction="#applySalaryUpdate" text="Apply Salary Update" />
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                        <Tab text="View Reports">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                          </content>
+                        </Tab>
+                    </tabs>
+                  </TabPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+      <Button fx:id="Logout" layoutX="532.0" layoutY="374.0" mnemonicParsing="false" onAction="#handleLogout" text="Logout" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="14.0" />
+   </children>
+</AnchorPane>
