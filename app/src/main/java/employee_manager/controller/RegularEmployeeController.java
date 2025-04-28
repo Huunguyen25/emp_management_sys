@@ -1,17 +1,35 @@
 package employee_manager.controller;
 
 import employee_manager.view.ViewManager;
+
+import java.time.LocalDate;
+
+import employee_manager.model.Payroll;
+import employee_manager.model.RegularEmployee;
 import employee_manager.model.User;
 import employee_manager.util.*;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import employee_manager.model.Payroll;
 
 public class RegularEmployeeController {
     //TODO: Implement regular emp interactions and send data to model
-    private User _regularEmployee;
     @FXML private Label greetNameLabel;
+
+    @FXML private TableView<Payroll> payrollTable;
+    @FXML private TableColumn<Payroll, Integer> payIdColumn;
+    @FXML private TableColumn<Payroll, LocalDate> payDateColumn;
+    @FXML private TableColumn<Payroll, Double> earningsColumn;
+    @FXML private TableColumn<Payroll, Double> fedTaxColumn;
+    @FXML private TableColumn<Payroll, Double> fedMedColumn;
+    @FXML private TableColumn<Payroll, Double> fedSSColumn;
+    @FXML private TableColumn<Payroll, Double> stateTaxColumn;
+    @FXML private TableColumn<Payroll, Double> retire401kColumn;
+    @FXML private TableColumn<Payroll, Double> healthCareColumn;
 
     @FXML
     private void handleLogout(ActionEvent event){
@@ -25,7 +43,30 @@ public class RegularEmployeeController {
     @FXML
     private void initialize(){
         //TODO: Get the current session user
-        this._regularEmployee = Session.getUser();
-        greetNameLabel.setText("Greetings, " + _regularEmployee.getFName() + " " + _regularEmployee.getLName());
+        User user = Session.getUser();
+        if (user instanceof RegularEmployee employee){
+            greetNameLabel.setText("Greetings, " + employee.getFName() + " " + employee.getLName());
+
+            payIdColumn.setCellValueFactory(new PropertyValueFactory<>("payID"));
+            payDateColumn.setCellValueFactory(new PropertyValueFactory<>("pay_date"));
+            earningsColumn.setCellValueFactory(new PropertyValueFactory<>("earnings"));
+            fedTaxColumn.setCellValueFactory(new PropertyValueFactory<>("fed_tax"));
+            fedMedColumn.setCellValueFactory(new PropertyValueFactory<>("fed_med"));
+            fedSSColumn.setCellValueFactory(new PropertyValueFactory<>("fed_SS"));
+            stateTaxColumn.setCellValueFactory(new PropertyValueFactory<>("state_tax"));
+            retire401kColumn.setCellValueFactory(new PropertyValueFactory<>("retire_401k"));
+            healthCareColumn.setCellValueFactory(new PropertyValueFactory<>("health_care"));
+
+            ObservableList<Payroll> payrollData = employee.get_payrollData();
+            payrollTable.setItems(payrollData);
+
+        } else{
+            try{
+                Session.removeCurrentUser();
+                ViewManager.switchScene(Constants.LOGIN_VIEW, null);
+            } catch (Exception e){
+                System.out.println("Error login out? " + e.getMessage());
+            }
+        }
     }
 }

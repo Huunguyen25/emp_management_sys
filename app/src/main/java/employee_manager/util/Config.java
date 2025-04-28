@@ -13,7 +13,7 @@ public class Config {
 
     static{
         String configPath = System.getProperty("config.file", "config.properties");
-        try(InputStream configIS = new FileInputStream(configPath) ){
+        try(InputStream configIS = new FileInputStream(configPath)){
             Properties prop = new Properties();
             prop.load(configIS);
             DB_URL = prop.getProperty("db.url");

@@ -9,7 +9,6 @@ import javafx.scene.*;
 import javafx.stage.*;
 
 public class ViewManager {
-
     public static void switchScene(String fxmlFilePath, ActionEvent event) throws IOException{
         Parent root = FXMLLoader.load(ViewManager.class.getResource(fxmlFilePath));
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();

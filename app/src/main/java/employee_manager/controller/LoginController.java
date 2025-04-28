@@ -25,13 +25,15 @@ public class LoginController {
             }
             //Instead of role, make a new user object
             User user = Model.authenticateRole(employeeId, email);
+
+            
             if (user == null) return;
             switch (user.getRole()) {
-                case "admin":
+                case "Admin":
                     Session.setUser(user);
                     ViewManager.switchScene(Constants.ADMIN_VIEW, event);
                     break;
-                case "regularEmployee":
+                case "RegularEmployee":
                     Session.setUser(user);
                     ViewManager.switchScene(Constants.REGULAR_EMP_VIEW, event);
                     break;
@@ -40,6 +42,7 @@ public class LoginController {
             }
         } catch(Exception e){
             System.out.println("Error login in. Try again. " + e);
+            e.printStackTrace();
         }
     }
     @FXML

@@ -14,6 +14,6 @@ public class Session {
     }
 
     public static void removeCurrentUser(){
-        Session._currentUser = null;
+        if (_currentUser != null) Session._currentUser = null;
     }
 }
