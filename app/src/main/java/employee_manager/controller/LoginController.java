@@ -1,5 +1,6 @@
 package employee_manager.controller;
 import employee_manager.model.*;
+import employee_manager.service.UserService;
 import employee_manager.view.ViewManager;
 import employee_manager.util.*;
 
@@ -13,6 +14,8 @@ public class LoginController {
     @FXML private TextField empidField;
     @FXML private TextField emailField;
 
+    private UserService userService = new UserService();
+
     @FXML
     private void handleLoginClick(ActionEvent event){
         try{
@@ -23,22 +26,14 @@ public class LoginController {
                 System.out.println("Invalid credentials format");
                 return;
             }
-            //Instead of role, make a new user object
-            User user = Model.authenticateRole(employeeId, email);
-
-            
+            User user = userService.authenticateRole(employeeId, email);
             if (user == null) return;
-            switch (user.getRole()) {
-                case "Admin":
-                    Session.setUser(user);
-                    ViewManager.switchScene(Constants.ADMIN_VIEW, event);
-                    break;
-                case "RegularEmployee":
-                    Session.setUser(user);
-                    ViewManager.switchScene(Constants.REGULAR_EMP_VIEW, event);
-                    break;
-                default:
-                    break;
+            Session.setUser(user);
+
+            if(user.isAdmin()){
+                ViewManager.switchScene(Constants.ADMIN_VIEW, event);
+            }else{
+                ViewManager.switchScene(Constants.REGULAR_EMP_VIEW, event);
             }
         } catch(Exception e){
             System.out.println("Error login in. Try again. " + e);

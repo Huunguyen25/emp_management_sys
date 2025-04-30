@@ -54,9 +54,10 @@
                             <TableColumn fx:id="firstNameColumn" prefWidth="84.0" text="First Name" />
                               <TableColumn fx:id="lastNameColumn" prefWidth="94.0" text="Last Name" />
                               <TableColumn fx:id="emailColumn" prefWidth="126.0" text="Email" />
-                              <TableColumn fx:id="hireDateColumn" minWidth="0.0" prefWidth="65.0" text="Hire Date" />
+                              <TableColumn fx:id="hireDateColumn" minWidth="0.0" prefWidth="80.0" text="Hire Date" />
                               <TableColumn fx:id="salaryColumn" prefWidth="69.0" text="Salary" />
                               <TableColumn fx:id="ssnColumn" prefWidth="90.0" text="SSN" />
+                              <TableColumn fx:id="roleColumn" prefWidth="90.0" text="Role" />
                           </columns>
                         </TableView>
                      </children>
@@ -95,11 +96,6 @@
                                                 <Insets bottom="10.0" right="5.0" />
                                              </padding>
                                           </Label>
-                                          <CheckBox fx:id="filterByMinSalaryInclusive" layoutX="522.0" layoutY="33.0" mnemonicParsing="false" text="Inclusive">
-                                             <opaqueInsets>
-                                                <Insets bottom="10.0" right="30.0" />
-                                             </opaqueInsets>
-                                          </CheckBox>
                                           <TextField fx:id="filterByMinSalary" layoutX="428.0" layoutY="50.0" promptText="Enter Minimum Salary" />
                                           <Label layoutX="600.0" layoutY="33.0" text="Maximum Salary:">
                                              <opaqueInsets>
@@ -109,11 +105,6 @@
                                                 <Insets bottom="10.0" right="5.0" />
                                              </padding>
                                           </Label>
-                                          <CheckBox fx:id="filterByMaxSalaryInclusive" layoutX="696.0" layoutY="33.0" mnemonicParsing="false" text="Inclusive">
-                                             <opaqueInsets>
-                                                <Insets bottom="10.0" right="30.0" />
-                                             </opaqueInsets>
-                                          </CheckBox>
                                           <TextField fx:id="filterbyMaxSalary" layoutX="600.0" layoutY="50.0" promptText="Enter Maximum Salary" />
                                        </children>
                                     </AnchorPane>
