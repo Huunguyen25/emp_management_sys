@@ -28,14 +28,12 @@ public class AdminController {
     @FXML private TextField filterByEmail;
     @FXML private TextField filterByEmpID;
     @FXML private TextField filterByMinSalary;
+    @FXML private TextField filterByMaxSalary;
     @FXML private TextField filterByName;
     @FXML private TextField filterBySSN;
-    @FXML private TextField filterbyMaxSalary;
 
     @FXML private DatePicker filterByHireDateEnd;
-
-    @FXML private DatePicker filterbyHireDateStart;
-
+    @FXML private DatePicker filterByHireDateStart;
 
     @FXML private TextField SalaryUpdatePercentage;
     @FXML private TextField maxSalaryUpdate;
@@ -117,10 +115,10 @@ public class AdminController {
         filterByEmpID.textProperty().addListener(refreshFilter);
         filterBySSN.textProperty().addListener(refreshFilter);
         filterByMinSalary.textProperty().addListener(refreshFilter);
-        filterbyMaxSalary.textProperty().addListener(refreshFilter);
+        filterByMaxSalary.textProperty().addListener(refreshFilter);
     
         filterByHireDateEnd.valueProperty().addListener(refreshFilter);
-        filterbyHireDateStart.valueProperty().addListener(refreshFilter);
+        filterByHireDateStart.valueProperty().addListener(refreshFilter);
     }
     
     private void loadEmployeeList() {
@@ -139,66 +137,23 @@ public class AdminController {
         employeeTable.setItems(sortedData);
     }
 
-    private void applyFilters(){
+    private void applyFilters() {
         filteredData.setPredicate(employee -> {
-            try {
-                LocalDate hireDate = employee.getHireDate();
-                LocalDate hireDateStart = filterbyHireDateStart.getValue();
-                LocalDate hireDateEnd = filterByHireDateEnd.getValue();
-
-                if(hireDateStart!= null && hireDateStart.isAfter(hireDate)) return false;
-                if(hireDateEnd != null && hireDateEnd.isBefore(hireDate)) return false;
-            } catch (Exception e) {
-                return false;
-            }
-
-            if (filterByEmpID.getText() != null && !filterByEmpID.getText().isEmpty()) {
-                try {
-                    int filterID = Integer.parseInt(filterByEmpID.getText());
-                    if (employee.getEmpId() != filterID) {
-                        return false;
-                    }
-                } catch (NumberFormatException e) {
-                }
-            }
-
-            if((filterBySSN.getText() != null && !filterBySSN.getText().isEmpty())){
-                if(!employee.getSsn().toLowerCase().contains(filterBySSN.getText())){
-                    return false;
-                }
-            }
-
-            if((filterByEmail.getText() != null && !filterByEmail.getText().isEmpty())){
-                if(!employee.getUserEmail().toLowerCase().contains(filterByEmail.getText())){
-                    return false;
-                }
-            }
-
-            if((filterByName.getText() != null && !filterByName.getText().isEmpty())){
-                if(!(employee.getFname()+" "+employee.getLname()).toLowerCase().contains(filterByName.getText().toLowerCase())){
-                    return false;
-                }
-            }
-
-            if(isDouble(filterByMinSalary.getText()) && filterByMinSalary.getText() != null && !filterByMinSalary.getText().isEmpty()){
-                if(employee.getSalary() <= Double.parseDouble(filterByMinSalary.getText())){
-                    return false;
-                }
-            }
-            if(isDouble(filterbyMaxSalary.getText()) && filterbyMaxSalary.getText() != null && !filterbyMaxSalary.getText().isEmpty()){
-                if(employee.getSalary() >= Double.parseDouble(filterbyMaxSalary.getText())){
-                    return false;
-                }
-            }
+            if (!Filters.applyDateFilter_isAfter(filterByHireDateEnd, employee.getHireDate())) return false;
+            if (!Filters.applyDateFilter_isBefore(filterByHireDateStart, employee.getHireDate())) return false;
+            if (!Filters.fieldIsBlank(filterByEmpID) &&
+                !Filters.applyEmpIDFilter(filterByEmpID, employee.getEmpId())) return false;
+            if (!Filters.fieldIsBlank(filterBySSN) &&
+                !Filters.applyTextFilter(filterBySSN, employee.getSsn())) return false;
+            if (!Filters.fieldIsBlank(filterByEmail) &&
+                !Filters.applyTextFilter(filterByEmail, employee.getUserEmail())) return false;
+            if (!Filters.fieldIsBlank(filterByName) &&
+                !Filters.applyNameFilter(filterByName, employee.getFname(), employee.getLname())) return false;
+            if (!Filters.fieldIsBlank(filterByMinSalary) &&
+                !Filters.applySalaryFilter(filterByMinSalary, employee.getSalary(), false)) return false;
+            if (!Filters.fieldIsBlank(filterByMaxSalary) &&
+                !Filters.applySalaryFilter(filterByMaxSalary, employee.getSalary(), true)) return false;
             return true;
         });
-    }
-    public boolean isDouble(String input) {
-        try {
-            Double.parseDouble(input);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
     }
 }

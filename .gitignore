@@ -5,7 +5,7 @@
 build
 
 # Ignore app/bin
-app/bin
+bin
 
 # Ignore config to security 
 config.properties
