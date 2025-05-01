@@ -73,7 +73,7 @@ public class UserDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error fetching users: " + e.getMessage());
+            System.err.println("Error fetching users: " + e.getMessage());
         }
 
         return users;

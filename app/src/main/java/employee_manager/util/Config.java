@@ -20,7 +20,7 @@ public class Config {
             DB_USERNAME = prop.getProperty("db.username");
             DB_PASSWORD = prop.getProperty("db.password");
         } catch (IOException e){
-            System.out.println("Failed to load config.properties. Please create the file like the config.properties.example.");
+            System.err.println("Failed to load config.properties. Please create the file like the config.properties.example.");
             throw new RuntimeException(e);
         }
     }

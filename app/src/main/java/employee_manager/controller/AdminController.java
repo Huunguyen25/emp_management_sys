@@ -65,7 +65,7 @@ public class AdminController {
             Session.removeCurrentUser();
             ViewManager.switchScene("/employee_manager/view/Login.fxml", event);
         } catch (Exception e){
-            System.out.println("Error login out? " + e.getMessage());
+            System.err.println("Error login out? " + e.getMessage());
         }
     }
 

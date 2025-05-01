@@ -23,7 +23,7 @@ public class LoginController {
             String email = emailField.getText();
 
             if (employeeId == null || employeeId == 0 || !email.contains("@example.com")) {
-                System.out.println("Invalid credentials format");
+                System.err.println("Invalid credentials format");
                 return;
             }
             User user = userService.authenticateRole(employeeId, email);
@@ -36,7 +36,7 @@ public class LoginController {
                 ViewManager.switchScene(Constants.REGULAR_EMP_VIEW, event);
             }
         } catch(Exception e){
-            System.out.println("Error login in. Try again. " + e);
+            System.err.println("Error login in. Try again. " + e);
             e.printStackTrace();
         }
     }

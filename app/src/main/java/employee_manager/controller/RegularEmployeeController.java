@@ -38,7 +38,7 @@ public class RegularEmployeeController {
             Session.removeCurrentUser();
             ViewManager.switchScene(Constants.LOGIN_VIEW, event);
         } catch (Exception e){
-            System.out.println("Error login out? " + e.getMessage());
+            System.err.println("Error login out? " + e.getMessage());
         }
     }
     @FXML
@@ -49,7 +49,7 @@ public class RegularEmployeeController {
             try{
                 ViewManager.switchScene(Constants.LOGIN_VIEW, null);
             } catch (Exception e) {
-                System.out.println("Error switching scene: " + e.getMessage());
+                System.err.println("Error switching scene: " + e.getMessage());
             }
             return;
         }

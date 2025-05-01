@@ -37,7 +37,7 @@ public class PayrollDAO {
                 payrollData.add(payroll);
             }
         } catch (Exception e) {
-            System.out.println("Database error: " + e.getMessage());
+            System.err.println("Database error: " + e.getMessage());
         }
         return payrollData;
     } 
