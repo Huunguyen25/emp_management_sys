@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="460.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="employee_manager.controller.AdminSummaryController">
+   <children>
+      <Label layoutX="11.0" layoutY="6.0" text="Admin Payroll Summary by Month">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <TableView fx:id="summaryTable" layoutX="20.0" layoutY="33.0" prefHeight="427.0" prefWidth="460.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="23.0">
+         <columns>
+            <TableColumn fx:id="monthCol" prefWidth="112.0" text="Month" />
+            <TableColumn fx:id="jobTitleCol" minWidth="3.0" prefWidth="108.0" text="Job Title ID" />
+            <TableColumn fx:id="totalPayCol" minWidth="5.0" prefWidth="128.0" text="Total Pay" />
+         </columns>
+      </TableView>
+      <Button layoutX="406.0" layoutY="5.0" mnemonicParsing="false" text="Load Summary" onAction="#loadSummary" />
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</AnchorPane>

@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
 <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="employee_manager.controller.AddRemoveDialogEmpController">
    <tabs>
       <Tab text="Add Employee">
@@ -63,6 +62,7 @@
                         <TableColumn fx:id="idColumn" prefWidth="50.0" text="ID" />
                         <TableColumn fx:id="nameColumn" prefWidth="150.0" text="Name" />
                         <TableColumn fx:id="emailColumn" prefWidth="150.0" text="Email" />
+                        <TableColumn fx:id="roleColumn" prefWidth="75.0" text="Role" />
                      </columns>
                   </TableView>
                   <Button fx:id="removeButton" layoutX="216.0" layoutY="329.0" mnemonicParsing="false" onAction="#handleRemoveEmployee" text="Remove Selected Employee" AnchorPane.bottomAnchor="13.5" />

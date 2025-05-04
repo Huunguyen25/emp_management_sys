@@ -16,15 +16,22 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
+import javafx.scene.Node;
 
 public class AdminController {
 
@@ -44,9 +51,7 @@ public class AdminController {
 
     @FXML private TextField SalaryUpdatePercentage;
     @FXML private TextField maxSalaryUpdate;
-    @FXML private CheckBox maxSalaryUpdateInclusive;
     @FXML private TextField minSalaryUpdate;
-    @FXML private CheckBox minSalaryUpdateInclusive;
     
     @FXML private TableView<User> employeeTable;
     @FXML private TableColumn<User, Integer> empIDColumn;
@@ -58,12 +63,14 @@ public class AdminController {
     @FXML private TableColumn<User, String> ssnColumn;
     @FXML private TableColumn<User, String> roleColumn;
 
+    @FXML private ChoiceBox<String> reportChoiceBox;
+
     private ObservableList<User> masterData;
     private FilteredList<User> filteredData;
 
     private UserService user = new UserService();
+    private boolean changes = false;
 
-    //TODO: Implement admin interactions and send data to model
     @FXML
     public void handleLogout(ActionEvent event){ //handle logout click logout and logs out to login menu
         try{
@@ -82,6 +89,42 @@ public class AdminController {
     @FXML
     void handleApplySalaryUpdate(ActionEvent event) { //handle updating employee salaries
         //TODO: use minSalaryUpdate, minSalaryUpdateInclusive (which is a checkbox whether or not to include the minSalaryUpdate number ie. < vs <=), maxSalaryUpdate, maxSalaryUpdateInclusive, and salaryUpdatePercentage
+        try{
+            if(maxSalaryUpdate.getText().trim().isEmpty() || 
+               minSalaryUpdate.getText().trim().isEmpty() || 
+               SalaryUpdatePercentage.getText().trim().isEmpty()) {
+                showAlert(AlertType.ERROR, "Input error", "Enter value parameter and percentage");
+                return;
+            }
+            
+            double maxSalary = Double.parseDouble(maxSalaryUpdate.getText().trim());
+            double minSalary = Double.parseDouble(minSalaryUpdate.getText().trim());
+            double percentageInput = Double.parseDouble(SalaryUpdatePercentage.getText().trim());
+            double salaryUpdatePercentage = 1.0 + (percentageInput / 100);
+
+            if (maxSalary <= 0 || minSalary <= 0 || salaryUpdatePercentage <= 0) {
+                throw new NumberFormatException();
+            }
+
+            boolean confirmed = showConfirmation("Confirm new salary", 
+            "Are you sure you want to apple new salaray to employee within: " + 
+            minSalary + " " + maxSalary + "?");
+
+            if(confirmed){
+                boolean success = user.applySalaryUpdate(salaryUpdatePercentage, minSalary, maxSalary);
+                
+                if (success) {
+                    showAlert(AlertType.INFORMATION, "Success", "New salary applied successfully");
+                    changes = true;
+                } else {
+                    showAlert(AlertType.ERROR, "Error", "Failed to apply new salary");
+                }
+            }
+
+
+        } catch(NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
     @FXML
     void addRemoveEmployee(ActionEvent event){
@@ -116,7 +159,56 @@ public class AdminController {
 
     @FXML
     void handleGenerateReport(ActionEvent event){
+        String reportChoice = reportChoiceBox.getValue();
         
+        if(reportChoice.equals("Payroll Summary")) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/employee_manager/view/PayrollReport.fxml"));
+                Parent dialogContent = loader.load();
+                
+                PayrollReportController reportController = loader.getController();
+                
+                Stage dialogStage = new Stage();
+                dialogStage.setTitle("Complete Payroll Summary");
+                dialogStage.initModality(Modality.WINDOW_MODAL);
+                dialogStage.initOwner(((Node)event.getSource()).getScene().getWindow());
+                Scene dialogScene = new Scene(dialogContent);
+                dialogStage.setScene(dialogScene);
+                
+                reportController.loadPayrollData();
+                
+                dialogStage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert(AlertType.ERROR, "Error", "Could not load payroll report: " + e.getMessage());
+            }
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/employee_manager/view/AdminSummary.fxml"));
+                Parent dialogContent = loader.load();
+                
+                AdminSummaryController summaryController = loader.getController();
+                
+                Stage dialogStage = new Stage();
+                if(reportChoice.equals("Total pay for month by job title")) {
+                    dialogStage.setTitle("Payroll Summary by Job Title");
+                } else {
+                    dialogStage.setTitle("Payroll Summary by Division");
+                    summaryController.setReportType("division");
+                }
+                dialogStage.initModality(Modality.WINDOW_MODAL);
+                dialogStage.initOwner(((Node)event.getSource()).getScene().getWindow());
+                Scene dialogScene = new Scene(dialogContent);
+                dialogStage.setScene(dialogScene);
+                
+                summaryController.loadSummary();
+                
+                dialogStage.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert(AlertType.ERROR, "Error", "Could not load report: " + e.getMessage());
+            }
+        }
     }
     
 
@@ -133,6 +225,26 @@ public class AdminController {
 
         loadEmployeeList();
         bindLiveFilter();
+
+        reportChoiceBox.getItems().clear();
+        reportChoiceBox.getItems().addAll("Total pay for month by job title", "Total pay for month by Division", "Payroll Summary");
+        reportChoiceBox.setValue("Total pay for month by job title");
+    }
+
+    private boolean showConfirmation(String title, String message) {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        return alert.showAndWait().filter(response -> response == javafx.scene.control.ButtonType.OK).isPresent();
+    }
+
+    private void showAlert(AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     private void bindLiveFilter() {
@@ -150,18 +262,13 @@ public class AdminController {
     }
     
     private void loadEmployeeList() {
-        // ObservableList<User> employees = user.getAllEmployees();
-        // employeeTable.setItems(employees);
         masterData = user.getAllEmployees();
         filteredData = user.getFilteredEmployees(masterData);
     
-    // Wrap the FilteredList in a SortedList to enable sorting
         SortedList<User> sortedData = new SortedList<>(filteredData);
     
-    // Bind the SortedList comparator to the TableView comparator
         sortedData.comparatorProperty().bind(employeeTable.comparatorProperty());
     
-    // Set the sorted and filtered data to the table
         employeeTable.setItems(sortedData);
     }
 
@@ -207,12 +314,12 @@ public class AdminController {
             }
 
             if(isDouble(filterByMinSalary.getText()) && filterByMinSalary.getText() != null && !filterByMinSalary.getText().isEmpty()){
-                if(employee.getSalary() <= Double.parseDouble(filterByMinSalary.getText())){
+                if(employee.getSalary() < Double.parseDouble(filterByMinSalary.getText())){
                     return false;
                 }
             }
             if(isDouble(filterbyMaxSalary.getText()) && filterbyMaxSalary.getText() != null && !filterbyMaxSalary.getText().isEmpty()){
-                if(employee.getSalary() >= Double.parseDouble(filterbyMaxSalary.getText())){
+                if(employee.getSalary() > Double.parseDouble(filterbyMaxSalary.getText())){
                     return false;
                 }
             }

@@ -78,4 +78,67 @@ public class UserDAO {
 
         return users;
     }
+
+    public int getNextEmpId() throws SQLException {
+        String stmt = "SELECT MAX(empid) FROM employees";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(stmt);
+             ResultSet rs = ps.executeQuery()) {
+    
+            if (rs.next()) {
+                int maxId = rs.getInt(1);
+                return maxId + 1;
+            } else {
+                return 1;
+            }
+        }
+    }
+
+    public boolean addEmployee(String firstName, String lastName, String email, LocalDate hireDate, double salary, String ssn){
+        String stmt = "INSERT INTO employees (empid, Fname, Lname, email, HireDate, salary, ssn) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(stmt)) {
+                int empId = getNextEmpId();
+                if (empId != 1) {
+                    ps.setInt(1, empId);
+                } else {
+                    return false;
+                }
+                ps.setString(2, firstName);
+                ps.setString(3, lastName);
+                ps.setString(4, email);
+                ps.setDate(5, java.sql.Date.valueOf(hireDate));
+                ps.setDouble(6, salary);
+                ps.setString(7, ssn);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error adding employee: " + e.getMessage());
+            return false;
+        }
+    }
+    public boolean removeEmployee(int empid){
+        String stmt = "DELETE FROM employees WHERE empid = ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(stmt)) {
+            ps.setInt(1, empid);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error removing employee: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean applySalaryUpdate(double percentage, double minSalary, double maxSalary) {
+        String stmt = "UPDATE employees SET salary = salary * ? WHERE salary BETWEEN ? AND ?";
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(stmt)) {
+                ps.setDouble(1, percentage);
+                ps.setDouble(2, minSalary);
+                ps.setDouble(3, maxSalary);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating salaries: " + e.getMessage());
+            return false;
+        }
+    }
 }
