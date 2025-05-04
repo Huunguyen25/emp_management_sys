@@ -1,5 +1,6 @@
 package employee_manager.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 import employee_manager.model.User;
@@ -13,9 +14,13 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.TableView;
@@ -71,7 +76,6 @@ public class AdminController {
 
     @FXML
     void handleApplySearchFilter(ActionEvent event) { //handle applying the search filter to the TableView 
-        //TODO: use filterByEmpID, filterByName, filterByEmail, filterByMinSalary, filterByMinSalaryInclusive (checkbox whether or not to include filterbyMinSalary number ie. < vs <=), filterByMaxSalary, filterByMaxSalaryInclusive, filterByHireDateStart, filterByHireDateEnd, and SSN
         applyFilters();
     }
 
@@ -81,7 +85,29 @@ public class AdminController {
     }
     @FXML
     void addRemoveEmployee(ActionEvent event){
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/employee_manager/view/AddRemoveEmpDialog.fxml"));
+            Parent dialogContent = loader.load();
 
+            AddRemoveDialogEmpController dialogController = loader.getController();
+            dialogController.setUserService(user);
+            
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setTitle("Add/Remove Employee");
+            dialog.setHeaderText("Manage Employees");
+            dialog.getDialogPane().setContent(dialogContent);
+
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+            dialog.showAndWait().ifPresent(buttonType -> {
+                if (buttonType == ButtonType.OK) {
+                    dialogController.processResult();
+                    loadEmployeeList();
+                }
+            });
+        } catch (IOException e){
+            System.err.println(e);
+        }
     }
     @FXML
     void updateTable(ActionEvent event){
